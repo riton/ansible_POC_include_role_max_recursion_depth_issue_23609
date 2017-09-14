@@ -1,6 +1,4 @@
 ---
-# This is a sample ansible playbook template
-
 - hosts: localhost
   connection: local
   gather_facts: false
@@ -15,13 +13,24 @@
         final_role: false
       loop_control:
         loop_var: roleidx
-      with_sequence: start=1 end=20
+      with_sequence: start=1 end=40
 
     - include_role:
         name: create_arbo
       vars:
         final_role: true
-        roleidx: 21
+        roleidx: 41
 
   handlers: []
 
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+
+  tasks:
+    - include_role:
+        name: 'r1'
+
+  handlers: []

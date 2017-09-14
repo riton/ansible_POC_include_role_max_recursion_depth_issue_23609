@@ -4,15 +4,15 @@
     path: "{{ item }}"
     state: directory
   with_items:
-    - "/home/riton/Desktop/poc_ansible_recurse/roles/r{{roleidx}}"
-    - "/home/riton/Desktop/poc_ansible_recurse/roles/r{{roleidx}}/tasks"
+    - "{{ playbook_dir }}/roles/r{{roleidx}}"
+    - "{{ playbook_dir }}/roles/r{{roleidx}}/tasks"
 
 - template:
     src: 'main.yml.j2'
-    dest: "/home/riton/Desktop/poc_ansible_recurse/roles/r{{roleidx}}/tasks/main.yml"
+    dest: "{{ playbook_dir }}/roles/r{{roleidx}}/tasks/main.yml"
   when: not final_role
 
 - template:
     src: 'final-main.yml.j2'
-    dest: "/home/riton/Desktop/poc_ansible_recurse/roles/r{{roleidx}}/tasks/main.yml"
+    dest: "{{ playbook_dir }}/roles/r{{roleidx}}/tasks/main.yml"
   when: final_role
