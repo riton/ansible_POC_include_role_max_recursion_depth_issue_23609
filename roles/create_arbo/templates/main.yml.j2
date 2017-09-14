@@ -1,0 +1,9 @@
+---
+- debug:
+    msg: "Start of r{{roleidx}}"
+
+- include_role:
+    name: "r{{ ( (roleidx|int)+1) | int | string }}"
+
+- debug:
+    msg: "End of r{{roleidx}}"
