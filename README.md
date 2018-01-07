@@ -1,6 +1,6 @@
 # POC for ansible bug number 23609
 
-This is a Proof of Concept for the ansible bug `include/include_role: maximum recursion depth exceeded`
+This is a Proof of Concept for the ansible bug `include/include_role: maximum recursion depth exceeded` ([direct link to the bug](https://github.com/ansible/ansible/issues/23609))
 
 ## What this POC does
 
