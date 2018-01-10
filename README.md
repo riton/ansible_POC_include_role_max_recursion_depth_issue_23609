@@ -98,3 +98,2076 @@ to see the full traceback, use -vvv
 ```
 
 The playbook fails even sooner than with `include_role`.
+
+Here is the full traceback of the bug
+
+```
+ansible-playbook 2.5.0 (devel f2037bb629) last updated 2018/01/10 08:40:47 (GMT +200)
+  config file = None
+  configured module search path = [u'/home/user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/user/ansible/lib/ansible
+  executable location = /home/user/ansible/bin/ansible-playbook
+  python version = 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+No config file found; using defaults
+setting up inventory plugins
+ [WARNING]: Unable to parse /etc/ansible/hosts as an inventory source
+ [WARNING]: No inventory was parsed, only implicit localhost is available
+ [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+Loading callback plugin default of type stdout, v2.0 from /home/user/ansible/lib/ansible/plugins/callback/default.pyc
+
+PLAYBOOK: import_role.yml ******************************************************************************************************************
+1 plays in import_role.yml
+
+PLAY [localhost] ***************************************************************************************************************************
+META: ran handlers
+
+TASK [import_r1 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r1/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r1"
+}
+
+TASK [import_r2 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r2/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r2"
+}
+
+TASK [import_r3 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r3/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r3"
+}
+
+TASK [import_r4 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r4/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r4"
+}
+
+TASK [import_r5 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r5/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r5"
+}
+
+TASK [import_r6 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r6/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r6"
+}
+
+TASK [import_r7 : debug] *******************************************************************************************************************
+task path: /home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r7/tasks/main.yml:2
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r7"
+}
+ERROR! Unexpected Exception, this is probably a bug: maximum recursion depth exceeded
+the full traceback was:
+
+Traceback (most recent call last):
+  File "/home/user/ansible/bin/ansible-playbook", line 118, in <module>
+    exit_code = cli.run()
+  File "/home/user/ansible/lib/ansible/cli/playbook.py", line 122, in run
+    results = pbex.run()
+  File "/home/user/ansible/lib/ansible/executor/playbook_executor.py", line 159, in run
+    result = self._tqm.run(play=play)
+  File "/home/user/ansible/lib/ansible/executor/task_queue_manager.py", line 290, in run
+    play_return = strategy.run(iterator, play_context)
+  File "/home/user/ansible/lib/ansible/plugins/strategy/linear.py", line 248, in run
+    task_vars = self._variable_manager.get_vars(play=iterator._play, host=host, task=task)
+  File "/home/user/ansible/lib/ansible/vars/manager.py", line 404, in get_vars
+    all_vars = combine_vars(all_vars, task.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 69, in get_vars
+    all_vars = super(TaskInclude, self).get_vars()
+  File "/home/user/ansible/lib/ansible/playbook/task.py", line 327, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/block.py", line 77, in get_vars
+    all_vars.update(self._parent.get_vars())
+  File "/home/user/ansible/lib/ansible/playbook/task_include.py", line 68, in get_vars
+    if self.action != 'include':
+RuntimeError: maximum recursion depth exceeded
+```
