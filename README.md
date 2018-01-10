@@ -45,25 +45,56 @@ to see the full traceback, use -vvv
 ### Using import_role
 
 ```
-$ ansible-playbook poc-import_role.yml
+$ ansible-playbook poc-import_role.yml # to create the required roles
 [...]
 
+$ ansible-playbook import_role.yml
+[...]
 PLAY [localhost] ***************************************************************************************************************************
 
-TASK [include_role] ************************************************************************************************************************
-ERROR! A recursion loop was detected with the roles specified. Make sure child roles do not have dependencies on parent roles
+TASK [import_r1 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r1"
+}
 
-The error appears to have been in '/home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r31/tasks/main.yml': line 6, column 11, but may
-be elsewhere in the file depending on the exact syntax problem.
+TASK [import_r2 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r2"
+}
 
-The offending line appears to be:
+TASK [import_r3 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r3"
+}
 
-- import_role:
-    name: "import_r32"
-          ^ here
+TASK [import_r4 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r4"
+}
 
-PLAY RECAP *********************************************************************************************************************************
-localhost                  : ok=82   changed=0    unreachable=0    failed=0   
+TASK [import_r5 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r5"
+}
+
+TASK [import_r6 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r6"
+}
+
+TASK [import_r7 : debug] *******************************************************************************************************************
+ok: [localhost] => {
+    "attempts": 1, 
+    "msg": "Start of import_r7"
+}
+ERROR! Unexpected Exception, this is probably a bug: maximum recursion depth exceeded
+to see the full traceback, use -vvv
 ```
 
-The playbook refuses to start and triggers something like a _parse error_. There is no recursion loop in those roles.
+The playbook fails even sooner than with `include_role`.
