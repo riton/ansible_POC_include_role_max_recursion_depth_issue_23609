@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+
+  vars: {}
+
+  tasks:
+    - include_role:
+        name: use_import_role
+      vars:
+        final_role: false
+      loop_control:
+        loop_var: roleidx
+      with_sequence: start=1 end=40
+
+    - include_role:
+        name: use_import_role
+      vars:
+        final_role: true
+        roleidx: 41
+
+  handlers: []
+
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+
+  tasks:
+    - include_role:
+        name: 'import_r1'
+
+  handlers: []

@@ -1,0 +1,9 @@
+---
+- debug:
+    msg: "Start of import_r{{roleidx}}"
+
+- import_role:
+    name: "import_r{{ ( (roleidx|int)+1) | int | string }}"
+
+- debug:
+    msg: "End of import_r{{roleidx}}"
