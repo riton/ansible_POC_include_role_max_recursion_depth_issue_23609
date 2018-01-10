@@ -26,6 +26,8 @@ python version = 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
 
 ## How to trigger the bug
 
+### Using include_role
+
 ```
 $ ansible-playbook poc.yml
 [...]
@@ -39,3 +41,29 @@ TASK [r27 : include_role] ******************************************************
 ERROR! Unexpected Exception, this is probably a bug: maximum recursion depth exceeded while calling a Python object
 to see the full traceback, use -vvv
 ```
+
+### Using import_role
+
+```
+$ ansible-playbook poc-import_role.yml
+[...]
+
+PLAY [localhost] ***************************************************************************************************************************
+
+TASK [include_role] ************************************************************************************************************************
+ERROR! A recursion loop was detected with the roles specified. Make sure child roles do not have dependencies on parent roles
+
+The error appears to have been in '/home/user/ansible/ansible_POC_include_role_max_recursion_depth_issue_23609/roles/import_r31/tasks/main.yml': line 6, column 11, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+- import_role:
+    name: "import_r32"
+          ^ here
+
+PLAY RECAP *********************************************************************************************************************************
+localhost                  : ok=82   changed=0    unreachable=0    failed=0   
+```
+
+The playbook refuses to start and triggers something like a _parse error_. There is no recursion loop in those roles.
