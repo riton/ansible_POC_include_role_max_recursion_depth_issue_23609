@@ -4,7 +4,8 @@
   gather_facts: false
   become: false
 
-  vars: {}
+  vars: 
+    nested_roles: "{{ max_nested_import_roles | default(40) | int }}"
 
   tasks:
     - include_role:
@@ -13,12 +14,12 @@
         final_role: false
       loop_control:
         loop_var: roleidx
-      with_sequence: start=1 end=30
+      with_sequence: "start=1 end={{(nested_roles|int)-1|int}}"
 
     - include_role:
         name: use_import_role
       vars:
         final_role: true
-        roleidx: 31
+        roleidx: "{{ nested_roles }}"
 
   handlers: []

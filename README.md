@@ -37,15 +37,19 @@ Everything works fast and as expected.
 
 ### Using import_role
 
+**Create nested import_roles**
+
+This extra step is necessary, because some ansible bug sometimes trigger compilation or parsing error and avoid any real testing of 'max nested import_roles'
+
 ```
-$ ansible-playbook poc-import_role.yml # to create the required roles
+$ ansible-playbook -e max_nested_import_roles=3 import-create_roles.yml
 [...]
 ```
 
-and then to really use the `import_role` statement
+**Call the nested import_roles**
 
 ```
-$ ansible-playbook import_role.yml
+$ ansible-playbook import-poc.yml
 [...]
 PLAY [localhost] ***************************************************************************************************************************
 
