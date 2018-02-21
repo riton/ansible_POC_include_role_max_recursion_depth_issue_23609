@@ -29,18 +29,11 @@ python version = 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
 ### Using include_role
 
 ```
-$ ansible-playbook poc.yml
+$ ansible-playbook -e max_nested_include_roles=100 include-poc.yml
 [...]
-TASK [r27 : debug] *********************************************************************************************************************************************************************
-ok: [localhost] => {
-    "attempts": 1, 
-    "msg": "Start of r27"
-}
-
-TASK [r27 : include_role] **************************************************************************************************************************************************************
-ERROR! Unexpected Exception, this is probably a bug: maximum recursion depth exceeded while calling a Python object
-to see the full traceback, use -vvv
 ```
+
+Everything works fast and as expected.
 
 ### Using import_role
 

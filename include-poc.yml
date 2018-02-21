@@ -4,7 +4,8 @@
   gather_facts: false
   become: false
 
-  vars: {}
+  vars:
+    nested_roles: "{{ max_nested_include_roles | default(40) | int }}"
 
   tasks:
     - include_role:
@@ -13,13 +14,13 @@
         final_role: false
       loop_control:
         loop_var: roleidx
-      with_sequence: start=1 end=40
+      with_sequence: "start=1 end={{(nested_roles|int)-1|int}}"
 
     - include_role:
         name: create_arbo
       vars:
         final_role: true
-        roleidx: 41
+        roleidx: "{{ nested_roles }}"
 
   handlers: []
 
