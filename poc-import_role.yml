@@ -13,12 +13,12 @@
         final_role: false
       loop_control:
         loop_var: roleidx
-      with_sequence: start=1 end=7
+      with_sequence: start=1 end=30
 
     - include_role:
         name: use_import_role
       vars:
         final_role: true
-        roleidx: 8
+        roleidx: 31
 
   handlers: []

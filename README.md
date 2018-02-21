@@ -47,7 +47,11 @@ to see the full traceback, use -vvv
 ```
 $ ansible-playbook poc-import_role.yml # to create the required roles
 [...]
+```
 
+and then to really use the `import_rol` statement
+
+```
 $ ansible-playbook import_role.yml
 [...]
 PLAY [localhost] ***************************************************************************************************************************
