@@ -16,12 +16,12 @@ It simulates a useless set of role that are _chained_ to each other
 
 ```
 $ [ansible-include_role_poc](master)$ ansible --version
-ansible 2.5.0
-config file = None
-configured module search path = [u'/home/user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
-ansible python module location = /tmp/ansible/ansible-devel/lib/ansible
-executable location = /tmp/ansible/ansible-devel/bin/ansible
-python version = 2.7.12 (default, Nov 19 2016, 06:48:10) [GCC 5.4.0 20160609]
+ansible 2.6.0 (devel 53125d37d1) last updated 2018/02/21 22:20:37 (GMT +200)
+  config file = /home/user/.ansible.cfg
+  configured module search path = [u'/home/user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/user/Desktop/ansible-dev/ansible/lib/ansible
+  executable location = /home/user/Desktop/ansible-dev/ansible/bin/ansible
+  python version = 2.7.10 (default, Oct 14 2015, 16:09:02) [GCC 5.2.1 20151010]
 ```
 
 ## How to trigger the bug
